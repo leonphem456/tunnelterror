@@ -1,7 +1,9 @@
 package com.example;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class TunnelTerror {
 
@@ -24,8 +26,11 @@ public class TunnelTerror {
     boolean validTunnelSectionAmount;
     boolean empty;
     boolean notArrived = true;
-
+    int tieCounter = 0;
     ArrayList<Integer> telephoneLocations = new ArrayList<>();
+    ArrayList<Integer> differences = new ArrayList<>();
+    Set<Integer> multipleDifferenceCheck = new HashSet<>();
+    boolean leadTowardsMallorca = false;
 
     public String welocme() {
         return "Willkommen zum Tunnel Standort Guide\n";
@@ -147,6 +152,7 @@ public class TunnelTerror {
         telephoneLocations.forEach((n) -> {
 
             difference = n - userLocation;
+            differences.add(difference);
 
             if (nearestTelephone == 0 && lowestDifference == 0) {
                 lowestDifference = difference;
@@ -157,7 +163,18 @@ public class TunnelTerror {
             }
         });
 
-        if (nearestTelephone < userLocation) {
+        differences.forEach((n) -> {
+            if (multipleDifferenceCheck.add(n) == false) {
+                tieCounter++;
+                if (tieCounter > 1) {
+                    leadTowardsMallorca = true;
+                }
+            }
+        });
+
+        if (leadTowardsMallorca == true) {
+            goTowards = MALLORCA;
+        } else if (nearestTelephone < userLocation) {
             goTowards = BARCELONA;
         } else if (nearestTelephone > userLocation) {
             goTowards = MALLORCA;
